@@ -6,17 +6,19 @@ import com.manage.employeemanagement.exception.EmployeeRegistrationException;
 import com.manage.employeemanagement.repository.UserRepository;
 import com.manage.employeemanagement.request.EmployeeRegisterRequest;
 import com.manage.employeemanagement.services.interfaces.ManagerService;
-import com.manage.employeemanagement.utils.Converter;
+import com.manage.employeemanagement.utils.ConverterUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UsersResource;
+import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -35,7 +37,7 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public void addNewEmployee(EmployeeRegisterRequest employee) throws EmployeeRegistrationException {
-        UserRepresentation userRepresentation = Converter.convertEmployeeToUserRepresentation(employee);
+        UserRepresentation userRepresentation = ConverterUtils.convertEmployeeToUserRepresentation(employee);
         RealmResource realmResource = keycloak.realm(KEYCLOAK_REALM);
         UsersResource usersResource = realmResource.users();
         if(userRepository.findUserByUsername(userRepresentation.getUsername()).isPresent()) {
@@ -43,12 +45,29 @@ public class ManagerServiceImpl implements ManagerService {
             throw new EmployeeRegistrationException("User with username " + userRepresentation.getUsername() + " already exists", EmployeeRegistrationErrorEnum.USERNAME_ALREADY_EXISTS);
         }
         Response response = usersResource.create(userRepresentation);
-        if (response.getStatus() != 200) {
+        if (response.getStatus() != 201) {
             log.info("Couldn't register employee with username " + userRepresentation.getUsername());
             throw new EmployeeRegistrationException("Error during registration of employee " + userRepresentation.getUsername(), EmployeeRegistrationErrorEnum.UNKNOWN_ERROR);
         }
-        User newUser  = Converter.convertEmployeeToUser(employee);
+//        usersResource.get(userRepresentation.getUsername())
+//                .roles()
+//                .realmLevel()
+//                .add(getRoleRepresentation("EMPLOYEE"));
+        User newUser  = ConverterUtils.convertEmployeeToUser(employee);
         userRepository.save(newUser);
         log.info("Response: {} {}", response.getStatus(), response.getStatusInfo());
+    }
+
+    private List<RoleRepresentation> getRoleRepresentation(String role) {
+        List<RoleRepresentation> existingRoles = keycloak.realm(KEYCLOAK_REALM)
+                .roles().list();
+        for(RoleRepresentation currRole : existingRoles) {
+            if(currRole.getName().equals(role)) {
+                return List.of(currRole);
+            }
+        }
+        return null;
+
+
     }
 }

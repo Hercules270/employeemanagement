@@ -7,7 +7,9 @@ import org.keycloak.representations.idm.UserRepresentation;
 import java.util.Date;
 import java.util.List;
 
-public class Converter {
+import static java.util.Arrays.asList;
+
+public class ConverterUtils {
 
     public static UserRepresentation convertEmployeeToUserRepresentation(EmployeeRegisterRequest employee) {
         UserRepresentation userRepresentation = new UserRepresentation();
@@ -16,7 +18,8 @@ public class Converter {
         userRepresentation.setFirstName(employee.getFirstName());
         userRepresentation.setLastName(employee.getLastName());
         userRepresentation.setEmail(employee.getEmail());
-        userRepresentation.setRealmRoles(List.of("employee"));
+        userRepresentation.setEmailVerified(true);
+//        userRepresentation.setRealmRoles(List.of("EMPLOYEE"));
         return userRepresentation;
     }
 
