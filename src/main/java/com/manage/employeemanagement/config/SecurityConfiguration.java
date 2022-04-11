@@ -36,7 +36,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/employee/**")
                 .hasRole("EMPLOYEE")
                 .anyRequest()
-                .permitAll();
+                .denyAll();
 
     }
 

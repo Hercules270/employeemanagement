@@ -11,14 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UsersResource;
-import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 @Service
 @Slf4j
@@ -36,7 +34,7 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
-    public void addNewEmployee(EmployeeRegisterRequest employee) throws EmployeeRegistrationException {
+    public UserRepresentation addNewEmployee(EmployeeRegisterRequest employee) throws EmployeeRegistrationException {
         UserRepresentation userRepresentation = ConverterUtils.convertEmployeeToUserRepresentation(employee);
         RealmResource realmResource = keycloak.realm(KEYCLOAK_REALM);
         UsersResource usersResource = realmResource.users();
@@ -52,6 +50,7 @@ public class ManagerServiceImpl implements ManagerService {
         User newUser  = ConverterUtils.convertEmployeeToUser(employee);
         userRepository.save(newUser);
         log.info("Response: {} {}", response.getStatus(), response.getStatusInfo());
+        return userRepresentation;
     }
 
 }
