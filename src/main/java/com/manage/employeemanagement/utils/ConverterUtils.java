@@ -19,7 +19,7 @@ public class ConverterUtils {
         userRepresentation.setLastName(employee.getLastName());
         userRepresentation.setEmail(employee.getEmail());
         userRepresentation.setEmailVerified(true);
-//        userRepresentation.setRealmRoles(List.of("EMPLOYEE"));
+        userRepresentation.setGroups(List.of("employee_group"));    // This is needed to avoid role setting bug of keycloak client
         return userRepresentation;
     }
 

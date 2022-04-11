@@ -46,28 +46,12 @@ public class ManagerServiceImpl implements ManagerService {
         }
         Response response = usersResource.create(userRepresentation);
         if (response.getStatus() != 201) {
-            log.info("Couldn't register employee with username " + userRepresentation.getUsername());
+            log.info("Couldn't register employee with username: {} response status: {}", userRepresentation.getUsername(), response.getStatus());
             throw new EmployeeRegistrationException("Error during registration of employee " + userRepresentation.getUsername(), EmployeeRegistrationErrorEnum.UNKNOWN_ERROR);
         }
-//        usersResource.get(userRepresentation.getUsername())
-//                .roles()
-//                .realmLevel()
-//                .add(getRoleRepresentation("EMPLOYEE"));
         User newUser  = ConverterUtils.convertEmployeeToUser(employee);
         userRepository.save(newUser);
         log.info("Response: {} {}", response.getStatus(), response.getStatusInfo());
     }
 
-    private List<RoleRepresentation> getRoleRepresentation(String role) {
-        List<RoleRepresentation> existingRoles = keycloak.realm(KEYCLOAK_REALM)
-                .roles().list();
-        for(RoleRepresentation currRole : existingRoles) {
-            if(currRole.getName().equals(role)) {
-                return List.of(currRole);
-            }
-        }
-        return null;
-
-
-    }
 }
