@@ -5,6 +5,7 @@ import com.manage.employeemanagement.request.EmployeeRegisterRequest;
 import com.manage.employeemanagement.response.EmployeesResponse;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.data.domain.Sort;
 
 import java.util.Date;
 import java.util.List;
@@ -40,5 +41,10 @@ public class ConverterUtils {
 
     public static EmployeesResponse convertUserToEmployee(User user) {
         return new EmployeesResponse(user.getFirstName(), user.getLastName(), user.getEmail());
+    }
+
+    public static Sort.Order convertStringToOrder(String sort) {
+        String[] sortOrder = sort.split(",");
+        return new Sort.Order(sortOrder[1].equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortOrder[0]);
     }
 }

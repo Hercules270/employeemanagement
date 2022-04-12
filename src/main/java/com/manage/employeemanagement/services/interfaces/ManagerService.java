@@ -12,7 +12,7 @@ public interface ManagerService {
 
     UserRepresentation addNewEmployee(EmployeeRegisterRequest employee) throws EmployeeRegistrationException;
 
-    List<User> getAllEmployees();
+    List<User> getAllEmployees(int page, int size, String[] sort);
 
     Optional<User> getEmployee(String firstName, String lastName);
 }

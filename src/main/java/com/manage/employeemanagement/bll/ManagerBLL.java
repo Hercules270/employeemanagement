@@ -43,8 +43,8 @@ public class ManagerBLL {
                 HttpStatus.CREATED);
     }
 
-    public ResponseEntity<ResponseResult<List<EmployeesResponse>>> getAllEmployees() {
-        List<User> allUsers = managerService.getAllEmployees();
+    public ResponseEntity<ResponseResult<List<EmployeesResponse>>> getAllEmployees(int page, int size, String[] sort) {
+        List<User> allUsers = managerService.getAllEmployees(page, size, sort);
         List<EmployeesResponse> allEmployees = allUsers.stream()
                 .map(ConverterUtils::convertUserToEmployee)
                 .collect(Collectors.toList());

@@ -14,9 +14,14 @@ import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,8 +62,19 @@ public class ManagerServiceImpl implements ManagerService {
 
 
     @Override
-    public List<User> getAllEmployees() {
-        return userRepository.findAll();
+    public List<User> getAllEmployees(int page, int size, String[] sort) {
+        List<Sort.Order> orders = new ArrayList<>();
+
+        if(sort[0].contains(",")) {
+            for (String sortOrder : sort) {
+                orders.add(ConverterUtils.convertStringToOrder(sortOrder));
+            }
+        } else {
+            orders.add(new Sort.Order(sort[1].equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sort[0]));
+        }
+
+        Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
+        return userRepository.findAll(pagingSort).getContent();
     }
 
     @Override
