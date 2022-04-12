@@ -1,13 +1,16 @@
 package com.manage.employeemanagement.bll;
 
 
+import com.manage.employeemanagement.entity.Project;
 import com.manage.employeemanagement.entity.User;
 import com.manage.employeemanagement.exception.EmployeeRegistrationException;
 import com.manage.employeemanagement.request.EmployeeRegisterRequest;
 import com.manage.employeemanagement.response.EmployeesResponse;
 import com.manage.employeemanagement.response.EmployeeRegistrationResponse;
+import com.manage.employeemanagement.response.ProjectResponse;
 import com.manage.employeemanagement.response.ResponseResult;
 import com.manage.employeemanagement.services.interfaces.ManagerService;
+import com.manage.employeemanagement.services.interfaces.ProjectService;
 import com.manage.employeemanagement.utils.ConverterUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -26,10 +29,12 @@ import java.util.stream.Collectors;
 public class ManagerBLL {
 
     private final ManagerService managerService;
+    private final ProjectService projectService;
 
     @Autowired
-    public ManagerBLL(ManagerService managerService) {
+    public ManagerBLL(ManagerService managerService, ProjectService projectService) {
         this.managerService = managerService;
+        this.projectService = projectService;
     }
 
     public ResponseEntity<ResponseResult<EmployeeRegistrationResponse>> addNewEmployee(EmployeeRegisterRequest employee) throws EmployeeRegistrationException {
@@ -68,5 +73,18 @@ public class ManagerBLL {
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+    }
+
+    public ResponseEntity<ResponseResult<List<ProjectResponse>>> getAllProjects(int page, int size, String[] sort) {
+        List<Project> allProjects = projectService.getAllProjects(page, size, sort);
+        List<ProjectResponse> collect = allProjects.stream()
+                .map(ConverterUtils::convertProjectToProjectResponse)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(
+                new ResponseResult<>(
+                        collect, new Date()
+                ),
+                HttpStatus.OK
+        );
     }
 }

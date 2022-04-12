@@ -1,8 +1,10 @@
 package com.manage.employeemanagement.utils;
 
+import com.manage.employeemanagement.entity.Project;
 import com.manage.employeemanagement.entity.User;
 import com.manage.employeemanagement.request.EmployeeRegisterRequest;
 import com.manage.employeemanagement.response.EmployeesResponse;
+import com.manage.employeemanagement.response.ProjectResponse;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.data.domain.Sort;
@@ -46,5 +48,9 @@ public class ConverterUtils {
     public static Sort.Order convertStringToOrder(String sort) {
         String[] sortOrder = sort.split(",");
         return new Sort.Order(sortOrder[1].equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sortOrder[0]);
+    }
+
+    public static ProjectResponse convertProjectToProjectResponse(Project project) {
+        return new ProjectResponse(project.getName(), project.getStartDate(), project.getEndDate());
     }
 }

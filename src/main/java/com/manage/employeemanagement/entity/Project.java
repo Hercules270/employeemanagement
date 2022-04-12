@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -20,5 +21,8 @@ public class Project {
 
     @OneToMany(mappedBy = "project")
     private Set<AssignedProject> assignments;
+
+    private Date startDate;
+    private Date endDate;
 
 }

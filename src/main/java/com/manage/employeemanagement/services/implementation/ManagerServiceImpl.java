@@ -7,6 +7,7 @@ import com.manage.employeemanagement.repository.UserRepository;
 import com.manage.employeemanagement.request.EmployeeRegisterRequest;
 import com.manage.employeemanagement.services.interfaces.ManagerService;
 import com.manage.employeemanagement.utils.ConverterUtils;
+import com.manage.employeemanagement.utils.CustomUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
@@ -63,18 +64,8 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public List<User> getAllEmployees(int page, int size, String[] sort) {
-        List<Sort.Order> orders = new ArrayList<>();
-
-        if(sort[0].contains(",")) {
-            for (String sortOrder : sort) {
-                orders.add(ConverterUtils.convertStringToOrder(sortOrder));
-            }
-        } else {
-            orders.add(new Sort.Order(sort[1].equals("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, sort[0]));
-        }
-
-        Pageable pagingSort = PageRequest.of(page, size, Sort.by(orders));
-        return userRepository.findAll(pagingSort).getContent();
+        Pageable pageAndSort = CustomUtils.getPageAndSort(page, size, sort);
+        return userRepository.findAll(pageAndSort).getContent();
     }
 
     @Override
