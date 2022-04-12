@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class AllEmployeesResponse {
+public class EmployeesResponse {
 
     private String firstName;
     private String lastName;

@@ -4,7 +4,7 @@ package com.manage.employeemanagement.controller;
 import com.manage.employeemanagement.bll.ManagerBLL;
 import com.manage.employeemanagement.exception.EmployeeRegistrationException;
 import com.manage.employeemanagement.request.EmployeeRegisterRequest;
-import com.manage.employeemanagement.response.AllEmployeesResponse;
+import com.manage.employeemanagement.response.EmployeesResponse;
 import com.manage.employeemanagement.response.EmployeeRegistrationResponse;
 import com.manage.employeemanagement.response.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,12 @@ public class ManagerController {
     }
 
     @GetMapping("/employees")
-    public ResponseEntity<ResponseResult<List<AllEmployeesResponse>>> getAllEmployees() {
+    public ResponseEntity<ResponseResult<List<EmployeesResponse>>> getAllEmployees() {
         return managerBLL.getAllEmployees();
+    }
+
+    @GetMapping("/employee")
+    public ResponseEntity<ResponseResult<EmployeesResponse>> getEmployee(@RequestParam String firstName, @RequestParam String lastName) {
+        return managerBLL.getEmployee(firstName, lastName);
     }
 }

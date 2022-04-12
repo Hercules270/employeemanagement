@@ -2,18 +2,12 @@ package com.manage.employeemanagement.utils;
 
 import com.manage.employeemanagement.entity.User;
 import com.manage.employeemanagement.request.EmployeeRegisterRequest;
-import com.manage.employeemanagement.response.AllEmployeesResponse;
+import com.manage.employeemanagement.response.EmployeesResponse;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.passay.CharacterData;
-import org.passay.CharacterRule;
-import org.passay.EnglishCharacterData;
-import org.passay.PasswordGenerator;
 
 import java.util.Date;
 import java.util.List;
-
-import static org.passay.DigestDictionaryRule.ERROR_CODE;
 
 public class ConverterUtils {
 
@@ -44,7 +38,7 @@ public class ConverterUtils {
 
     }
 
-    public static AllEmployeesResponse convertUserToEmployee(User user) {
-        return new AllEmployeesResponse(user.getFirstName(), user.getLastName(), user.getEmail());
+    public static EmployeesResponse convertUserToEmployee(User user) {
+        return new EmployeesResponse(user.getFirstName(), user.getLastName(), user.getEmail());
     }
 }

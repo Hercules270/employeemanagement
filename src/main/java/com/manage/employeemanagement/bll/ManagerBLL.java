@@ -4,7 +4,7 @@ package com.manage.employeemanagement.bll;
 import com.manage.employeemanagement.entity.User;
 import com.manage.employeemanagement.exception.EmployeeRegistrationException;
 import com.manage.employeemanagement.request.EmployeeRegisterRequest;
-import com.manage.employeemanagement.response.AllEmployeesResponse;
+import com.manage.employeemanagement.response.EmployeesResponse;
 import com.manage.employeemanagement.response.EmployeeRegistrationResponse;
 import com.manage.employeemanagement.response.ResponseResult;
 import com.manage.employeemanagement.services.interfaces.ManagerService;
@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -42,9 +43,9 @@ public class ManagerBLL {
                 HttpStatus.CREATED);
     }
 
-    public ResponseEntity<ResponseResult<List<AllEmployeesResponse>>> getAllEmployees() {
+    public ResponseEntity<ResponseResult<List<EmployeesResponse>>> getAllEmployees() {
         List<User> allUsers = managerService.getAllEmployees();
-        List<AllEmployeesResponse> allEmployees = allUsers.stream()
+        List<EmployeesResponse> allEmployees = allUsers.stream()
                 .map(ConverterUtils::convertUserToEmployee)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(
@@ -52,5 +53,20 @@ public class ManagerBLL {
                         allEmployees, new Date()
                 ), HttpStatus.OK
         );
+    }
+
+    public ResponseEntity<ResponseResult<EmployeesResponse>> getEmployee(String firstName, String lastName) {
+        Optional<User> employee = managerService.getEmployee(firstName, lastName);
+        if(employee.isPresent()) {
+            return new ResponseEntity<>(
+                    new ResponseResult<>(
+                            ConverterUtils.convertUserToEmployee(employee.get()),
+                            new Date()
+                    ),
+                    HttpStatus.OK
+            );
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 }

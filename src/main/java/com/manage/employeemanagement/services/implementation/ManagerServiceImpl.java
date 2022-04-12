@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -60,5 +61,8 @@ public class ManagerServiceImpl implements ManagerService {
         return userRepository.findAll();
     }
 
-
+    @Override
+    public Optional<User> getEmployee(String firstName, String lastName) {
+        return userRepository.findUserByFirstNameAndLastName(firstName, lastName);
+    }
 }
