@@ -4,6 +4,7 @@ import com.manage.employeemanagement.entity.Project;
 import com.manage.employeemanagement.exception.ProjectRegistrationException;
 import com.manage.employeemanagement.request.ProjectRegistrationRequest;
 
+import javax.ws.rs.BadRequestException;
 import java.util.List;
 
 public interface ProjectService {
@@ -13,4 +14,6 @@ public interface ProjectService {
     Project addNewProject(ProjectRegistrationRequest project) throws ProjectRegistrationException;
 
     void deleteProject(String projectName);
+
+    void renameProject(String oldName, String newName) throws BadRequestException;
 }

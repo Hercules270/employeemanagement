@@ -103,4 +103,9 @@ public class ManagerBLL {
         projectService.deleteProject(projectName);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    public ResponseEntity renameProject(String oldName, String newName) {
+        projectService.renameProject(oldName, newName);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

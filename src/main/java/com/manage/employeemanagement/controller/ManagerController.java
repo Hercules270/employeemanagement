@@ -6,6 +6,7 @@ import com.manage.employeemanagement.exception.EmployeeRegistrationException;
 import com.manage.employeemanagement.exception.ProjectRegistrationException;
 import com.manage.employeemanagement.request.EmployeeRegisterRequest;
 import com.manage.employeemanagement.request.ProjectRegistrationRequest;
+import com.manage.employeemanagement.request.UpdateProjectNameRequest;
 import com.manage.employeemanagement.response.EmployeesResponse;
 import com.manage.employeemanagement.response.EmployeeRegistrationResponse;
 import com.manage.employeemanagement.response.ProjectResponse;
@@ -68,6 +69,11 @@ public class ManagerController {
     @DeleteMapping("/projects/{projectName}")
     public ResponseEntity deleteProject(@PathVariable String projectName) {
         return managerBLL.deleteProject(projectName);
+    }
+
+    @PutMapping("/projects/{oldName}")
+    public ResponseEntity renameProject(@PathVariable String oldName, @RequestBody UpdateProjectNameRequest name) {
+        return managerBLL.renameProject(oldName, name.getNewName());
     }
 
 }
