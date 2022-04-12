@@ -3,7 +3,9 @@ package com.manage.employeemanagement.controller;
 
 import com.manage.employeemanagement.bll.ManagerBLL;
 import com.manage.employeemanagement.exception.EmployeeRegistrationException;
+import com.manage.employeemanagement.exception.ProjectRegistrationException;
 import com.manage.employeemanagement.request.EmployeeRegisterRequest;
+import com.manage.employeemanagement.request.ProjectRegistrationRequest;
 import com.manage.employeemanagement.response.EmployeesResponse;
 import com.manage.employeemanagement.response.EmployeeRegistrationResponse;
 import com.manage.employeemanagement.response.ProjectResponse;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
 
@@ -55,6 +58,11 @@ public class ManagerController {
             @RequestParam(defaultValue = "id,asc") String[] sort
     ) {
         return managerBLL.getAllProjects(page, size, sort);
+    }
+
+    @PostMapping("/projects")
+    public ResponseEntity addProject(@Valid @RequestBody ProjectRegistrationRequest project) throws ProjectRegistrationException {
+        return managerBLL.addNewProject(project);
     }
 
 }

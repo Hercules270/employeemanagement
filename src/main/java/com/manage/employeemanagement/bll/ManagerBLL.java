@@ -4,7 +4,9 @@ package com.manage.employeemanagement.bll;
 import com.manage.employeemanagement.entity.Project;
 import com.manage.employeemanagement.entity.User;
 import com.manage.employeemanagement.exception.EmployeeRegistrationException;
+import com.manage.employeemanagement.exception.ProjectRegistrationException;
 import com.manage.employeemanagement.request.EmployeeRegisterRequest;
+import com.manage.employeemanagement.request.ProjectRegistrationRequest;
 import com.manage.employeemanagement.response.EmployeesResponse;
 import com.manage.employeemanagement.response.EmployeeRegistrationResponse;
 import com.manage.employeemanagement.response.ProjectResponse;
@@ -19,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import javax.ws.rs.BadRequestException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -86,5 +89,13 @@ public class ManagerBLL {
                 ),
                 HttpStatus.OK
         );
+    }
+
+    public ResponseEntity addNewProject(ProjectRegistrationRequest projectRequest) throws ProjectRegistrationException {
+        if(projectRequest.getEndDate().before(projectRequest.getStartDate())) {
+            throw new BadRequestException("End date must be after start date");
+        }
+        projectService.addNewProject(projectRequest);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

@@ -3,6 +3,7 @@ package com.manage.employeemanagement.utils;
 import com.manage.employeemanagement.entity.Project;
 import com.manage.employeemanagement.entity.User;
 import com.manage.employeemanagement.request.EmployeeRegisterRequest;
+import com.manage.employeemanagement.request.ProjectRegistrationRequest;
 import com.manage.employeemanagement.response.EmployeesResponse;
 import com.manage.employeemanagement.response.ProjectResponse;
 import org.keycloak.representations.idm.CredentialRepresentation;
@@ -52,5 +53,9 @@ public class ConverterUtils {
 
     public static ProjectResponse convertProjectToProjectResponse(Project project) {
         return new ProjectResponse(project.getName(), project.getStartDate(), project.getEndDate());
+    }
+
+    public static Project convertProjectRequestToProject(ProjectRegistrationRequest projectRequest) {
+        return new Project(projectRequest.getName(), projectRequest.getStartDate(), projectRequest.getEndDate());
     }
 }
