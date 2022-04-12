@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -47,6 +48,7 @@ public class ManagerServiceImpl implements ManagerService {
         UsersResource usersResource = realmResource.users();
         User newUser = ConverterUtils.convertEmployeeToUser(employee);
         userRepository.save(newUser);
+        userRepresentation.setAttributes(Map.of("employeeId", List.of(newUser.getUserId())));
         Response response = usersResource.create(userRepresentation);
         if (response.getStatus() != 201) {
             log.info("Couldn't register employee with username: {} response status: {}", userRepresentation.getUsername(), response.getStatus());

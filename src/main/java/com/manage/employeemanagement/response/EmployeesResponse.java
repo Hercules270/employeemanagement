@@ -8,8 +8,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class EmployeesResponse {
 
+    private String employeeId;
     private String firstName;
     private String lastName;
     private String email;
-
 }

@@ -1,10 +1,8 @@
 package com.manage.employeemanagement.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.checkerframework.common.aliasing.qual.Unique;
-import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -29,7 +27,7 @@ public class User {
     @Unique
     private String email;
     private Date startDate;
-    private String uid;
+    private String userId;
 
     @OneToMany(mappedBy = "user")
     private Set<AssignedProject> assignments;
@@ -45,6 +43,6 @@ public class User {
 
     @PrePersist
     protected void onCreate() {
-        setUid(UUID.randomUUID().toString());
+        setUserId(UUID.randomUUID().toString());
     }
 }

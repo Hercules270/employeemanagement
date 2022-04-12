@@ -43,7 +43,7 @@ public class ConverterUtils {
     }
 
     public static EmployeesResponse convertUserToEmployee(User user) {
-        return new EmployeesResponse(user.getFirstName(), user.getLastName(), user.getEmail());
+        return new EmployeesResponse(user.getUserId(), user.getFirstName(), user.getLastName(), user.getEmail());
     }
 
     public static Sort.Order convertStringToOrder(String sort) {

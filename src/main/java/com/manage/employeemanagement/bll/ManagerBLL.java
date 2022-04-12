@@ -44,7 +44,8 @@ public class ManagerBLL {
         UserRepresentation userRepresentation = managerService.addNewEmployee(employee);
         return new ResponseEntity<>(
                 new ResponseResult<>(
-                        new EmployeeRegistrationResponse(userRepresentation.getUsername(),
+                        new EmployeeRegistrationResponse(userRepresentation.getAttributes().get("employeeId").get(0),
+                                userRepresentation.getUsername(),
                                 userRepresentation.getEmail(),
                                 userRepresentation.getCredentials().get(0).getValue()),
                         new Date()),

@@ -7,6 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class EmployeeRegistrationResponse {
 
+    private String employeeId;
     private String username;
     private String email;
     private String temporaryPassword;
