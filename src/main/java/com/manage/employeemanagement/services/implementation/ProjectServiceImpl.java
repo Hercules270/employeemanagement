@@ -42,6 +42,11 @@ public class ProjectServiceImpl implements ProjectService {
         }
         Project project = ConverterUtils.convertProjectRequestToProject(projectRequest);
         return projectRepository.save(project);
+    }
 
+    @Override
+    public void deleteProject(String projectName) {
+        Optional<Project> project = projectRepository.findProjectByName(projectName);
+        project.ifPresent(projectRepository::delete);
     }
 }

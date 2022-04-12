@@ -65,4 +65,9 @@ public class ManagerController {
         return managerBLL.addNewProject(project);
     }
 
+    @DeleteMapping("/projects/{projectName}")
+    public ResponseEntity deleteProject(@PathVariable String projectName) {
+        return managerBLL.deleteProject(projectName);
+    }
+
 }

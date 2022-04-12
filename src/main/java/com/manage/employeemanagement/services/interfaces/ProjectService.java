@@ -12,4 +12,5 @@ public interface ProjectService {
 
     Project addNewProject(ProjectRegistrationRequest project) throws ProjectRegistrationException;
 
+    void deleteProject(String projectName);
 }

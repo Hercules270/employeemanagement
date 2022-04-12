@@ -98,4 +98,9 @@ public class ManagerBLL {
         projectService.addNewProject(projectRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    public ResponseEntity deleteProject(String projectName) {
+        projectService.deleteProject(projectName);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
