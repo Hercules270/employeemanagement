@@ -15,14 +15,11 @@ import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,23 +39,36 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
+    @Transactional
     public UserRepresentation addNewEmployee(EmployeeRegisterRequest employee) throws EmployeeRegistrationException {
+        isEmployeeUnique(employee);
         UserRepresentation userRepresentation = ConverterUtils.convertEmployeeToUserRepresentation(employee);
         RealmResource realmResource = keycloak.realm(KEYCLOAK_REALM);
         UsersResource usersResource = realmResource.users();
-        if(userRepository.findUserByUsername(userRepresentation.getUsername()).isPresent()) {
-            log.info("User with username {} already exists", userRepresentation.getUsername());
-            throw new EmployeeRegistrationException("User with username " + userRepresentation.getUsername() + " already exists", EmployeeRegistrationErrorEnum.USERNAME_ALREADY_EXISTS);
-        }
+        User newUser = ConverterUtils.convertEmployeeToUser(employee);
+        userRepository.save(newUser);
         Response response = usersResource.create(userRepresentation);
         if (response.getStatus() != 201) {
             log.info("Couldn't register employee with username: {} response status: {}", userRepresentation.getUsername(), response.getStatus());
             throw new EmployeeRegistrationException("Error during registration of employee " + userRepresentation.getUsername(), EmployeeRegistrationErrorEnum.UNKNOWN_ERROR);
         }
-        User newUser  = ConverterUtils.convertEmployeeToUser(employee);
-        userRepository.save(newUser);
         log.info("Response: {} {}", response.getStatus(), response.getStatusInfo());
         return userRepresentation;
+    }
+
+    private void isEmployeeUnique(EmployeeRegisterRequest userRepresentation) throws EmployeeRegistrationException {
+        if(userRepository.findUserByUsername(userRepresentation.getUsername()).isPresent()) {
+            log.info("User with username {} already exists", userRepresentation.getUsername());
+            throw new EmployeeRegistrationException("User with username " + userRepresentation.getUsername() + " already exists", EmployeeRegistrationErrorEnum.USERNAME_ALREADY_EXISTS);
+        }
+        if(userRepository.findUserByEmail(userRepresentation.getEmail()).isPresent()) {
+            log.info("User with email {} already exists", userRepresentation.getEmail());
+            throw new EmployeeRegistrationException("User with email " + userRepresentation.getEmail() + " already exists", EmployeeRegistrationErrorEnum.USERNAME_ALREADY_EXISTS);
+        }
+        if(userRepository.findUserByFirstNameAndLastName(userRepresentation.getFirstName(), userRepresentation.getLastName()).isPresent()) {
+            log.info("User with firstName {} and lastName {} already exists", userRepresentation.getFirstName(), userRepresentation.getLastName());
+            throw new EmployeeRegistrationException("User with firstName " + userRepresentation.getFirstName() + "and lastName " + userRepresentation.getLastName() + " already exists", EmployeeRegistrationErrorEnum.USERNAME_ALREADY_EXISTS);
+        }
     }
 
 
