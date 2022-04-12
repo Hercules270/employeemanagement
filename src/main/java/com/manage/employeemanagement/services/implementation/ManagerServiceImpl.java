@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -52,5 +53,12 @@ public class ManagerServiceImpl implements ManagerService {
         log.info("Response: {} {}", response.getStatus(), response.getStatusInfo());
         return userRepresentation;
     }
+
+
+    @Override
+    public List<User> getAllEmployees() {
+        return userRepository.findAll();
+    }
+
 
 }

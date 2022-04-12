@@ -4,16 +4,14 @@ package com.manage.employeemanagement.controller;
 import com.manage.employeemanagement.bll.ManagerBLL;
 import com.manage.employeemanagement.exception.EmployeeRegistrationException;
 import com.manage.employeemanagement.request.EmployeeRegisterRequest;
+import com.manage.employeemanagement.response.AllEmployeesResponse;
 import com.manage.employeemanagement.response.EmployeeRegistrationResponse;
 import com.manage.employeemanagement.response.ResponseResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.util.List;
 
 
 @RestController
@@ -30,5 +28,10 @@ public class ManagerController {
     @PostMapping("/addEmployee")
     public ResponseEntity<ResponseResult<EmployeeRegistrationResponse>> addUser(@RequestBody EmployeeRegisterRequest employee) throws EmployeeRegistrationException {
         return managerBLL.addNewEmployee(employee);
+    }
+
+    @GetMapping("/employees")
+    public ResponseEntity<ResponseResult<List<AllEmployeesResponse>>> getAllEmployees() {
+        return managerBLL.getAllEmployees();
     }
 }
