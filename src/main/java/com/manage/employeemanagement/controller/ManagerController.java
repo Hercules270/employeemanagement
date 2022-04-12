@@ -32,7 +32,7 @@ public class ManagerController {
         this.managerBLL = managerBLL;
     }
 
-    @PostMapping("/addEmployee")
+    @PostMapping("/employees")
     public ResponseEntity<ResponseResult<EmployeeRegistrationResponse>> addUser(@RequestBody EmployeeRegisterRequest employee) throws EmployeeRegistrationException {
         return managerBLL.addNewEmployee(employee);
     }
