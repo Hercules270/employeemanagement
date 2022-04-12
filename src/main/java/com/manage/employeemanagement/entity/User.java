@@ -5,11 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Data
@@ -24,6 +22,9 @@ public class User {
     private String username;
     private String email;
     private Date startDate;
+
+    @OneToMany(mappedBy = "user")
+    private Set<AssignedProject> assignments;
 
 
     public User(String firstName, String lastName, String username, String email, Date startDate) {
