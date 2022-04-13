@@ -24,7 +24,10 @@ public class Project {
     @OneToMany(mappedBy = "project")
     private Set<AssignedProject> assignments;
 
+    @Temporal(TemporalType.DATE)
     private Date startDate;
+
+    @Temporal(TemporalType.DATE)
     private Date endDate;
 
     public Project(String name, Date startDate, Date endDate) {
