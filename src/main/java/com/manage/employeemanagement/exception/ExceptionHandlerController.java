@@ -6,6 +6,7 @@ import com.manage.employeemanagement.response.ErrorResponseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.transaction.TransactionException;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -90,13 +91,31 @@ public class ExceptionHandlerController {
         );
     }
 
+    @ExceptionHandler(value = HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponseResult> handleUnformattedRequestBody(
+            Exception ex, WebRequest request) {
+        log.info("Error: ", ex);
+        return new ResponseEntity<>(
+                new ErrorResponseResult("Request parameters are not valid", new Date()), HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(value = ProjectAssignmentException.class)
+    public ResponseEntity<ErrorResponseResult> handleUnformattedRequestBody(
+            ProjectAssignmentException ex, WebRequest request) {
+        log.info("Error: ", ex);
+        return new ResponseEntity<>(
+                new ErrorResponseResult(ex.getMessage(), new Date()), HttpStatus.BAD_REQUEST
+        );
+    }
+
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<ErrorResponseResult> handleAllOtherException(
             Exception ex, WebRequest request) {
+        log.info("Error: ", ex);
         return new ResponseEntity<>(
                 new ErrorResponseResult("Server error", new Date()), HttpStatus.INTERNAL_SERVER_ERROR
         );
     }
-
 
 }

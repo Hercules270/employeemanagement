@@ -1,7 +1,10 @@
 package com.manage.employeemanagement.services.interfaces;
 
+import com.manage.employeemanagement.entity.AssignedProject;
 import com.manage.employeemanagement.entity.Project;
+import com.manage.employeemanagement.exception.ProjectAssignmentException;
 import com.manage.employeemanagement.exception.ProjectRegistrationException;
+import com.manage.employeemanagement.request.ProjectAssignmentRequest;
 import com.manage.employeemanagement.request.ProjectRegistrationRequest;
 
 import javax.ws.rs.BadRequestException;
@@ -16,4 +19,6 @@ public interface ProjectService {
     void deleteProject(String projectName);
 
     void renameProject(String oldName, String newName) throws BadRequestException;
+
+    AssignedProject assignProjectToEmployee(ProjectAssignmentRequest projectAssignmentRequest) throws ProjectAssignmentException;
 }

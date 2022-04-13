@@ -1,19 +1,21 @@
 package com.manage.employeemanagement.bll;
 
 
+import com.manage.employeemanagement.entity.AssignedProject;
 import com.manage.employeemanagement.entity.Project;
 import com.manage.employeemanagement.entity.User;
+import com.manage.employeemanagement.enums.Workday;
 import com.manage.employeemanagement.exception.EmployeeRegistrationException;
+import com.manage.employeemanagement.exception.ProjectAssignmentException;
 import com.manage.employeemanagement.exception.ProjectRegistrationException;
 import com.manage.employeemanagement.request.EmployeeRegisterRequest;
+import com.manage.employeemanagement.request.ProjectAssignmentRequest;
 import com.manage.employeemanagement.request.ProjectRegistrationRequest;
-import com.manage.employeemanagement.response.EmployeesResponse;
-import com.manage.employeemanagement.response.EmployeeRegistrationResponse;
-import com.manage.employeemanagement.response.ProjectResponse;
-import com.manage.employeemanagement.response.ResponseResult;
+import com.manage.employeemanagement.response.*;
 import com.manage.employeemanagement.services.interfaces.ManagerService;
 import com.manage.employeemanagement.services.interfaces.ProjectService;
 import com.manage.employeemanagement.utils.ConverterUtils;
+import com.manage.employeemanagement.utils.CustomValidationUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.BadRequestException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -93,7 +96,7 @@ public class ManagerBLL {
     }
 
     public ResponseEntity addNewProject(ProjectRegistrationRequest projectRequest) throws ProjectRegistrationException {
-        if(projectRequest.getEndDate().before(projectRequest.getStartDate())) {
+        if(!CustomValidationUtils.endDateBeforeStartDate(projectRequest.getStartDate(), projectRequest.getEndDate())) {
             throw new BadRequestException("End date must be after start date");
         }
         projectService.addNewProject(projectRequest);
@@ -108,5 +111,20 @@ public class ManagerBLL {
     public ResponseEntity renameProject(String oldName, String newName) {
         projectService.renameProject(oldName, newName);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    public ResponseEntity<ResponseResult<ProjectAssignmentResponse>> assignProjectToEmployee(ProjectAssignmentRequest projectAssignmentRequest) throws ProjectAssignmentException {
+        if(projectAssignmentRequest.getDay() == Workday.SATURDAY || projectAssignmentRequest.getDay() == Workday.SUNDAY) {
+            throw new BadRequestException("Day should be between MONDAY and FRIDAY");
+        }
+        AssignedProject assignedProject = projectService.assignProjectToEmployee(projectAssignmentRequest);
+        ProjectAssignmentResponse projectAssignmentResponse = ConverterUtils.convertAssignedProjectToProjectAssignmentResponse(assignedProject);
+        log.info("Date is {}", new SimpleDateFormat("yyyy-MM-dd").format(projectAssignmentResponse.getDate()));
+        return new ResponseEntity<>(
+                new ResponseResult<>(
+                        projectAssignmentResponse, new Date()
+                ),
+                HttpStatus.CREATED
+        );
     }
 }

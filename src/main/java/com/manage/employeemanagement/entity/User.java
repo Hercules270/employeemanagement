@@ -21,10 +21,10 @@ public class User {
     private String firstName;
     private String lastName;
 
-    @Unique
+    @Column(unique = true)
     private String username;
 
-    @Unique
+    @Column(unique = true)
     private String email;
     private Date startDate;
     private String userId;

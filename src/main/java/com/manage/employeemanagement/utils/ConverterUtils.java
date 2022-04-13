@@ -1,15 +1,23 @@
 package com.manage.employeemanagement.utils;
 
+import com.manage.employeemanagement.entity.AssignedProject;
 import com.manage.employeemanagement.entity.Project;
 import com.manage.employeemanagement.entity.User;
+import com.manage.employeemanagement.enums.Workday;
 import com.manage.employeemanagement.request.EmployeeRegisterRequest;
+import com.manage.employeemanagement.request.ProjectAssignmentRequest;
 import com.manage.employeemanagement.request.ProjectRegistrationRequest;
 import com.manage.employeemanagement.response.EmployeesResponse;
+import com.manage.employeemanagement.response.ProjectAssignmentResponse;
 import com.manage.employeemanagement.response.ProjectResponse;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.data.domain.Sort;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 import java.util.List;
 
@@ -58,4 +66,38 @@ public class ConverterUtils {
     public static Project convertProjectRequestToProject(ProjectRegistrationRequest projectRequest) {
         return new Project(projectRequest.getName(), projectRequest.getStartDate(), projectRequest.getEndDate());
     }
+
+    public static Date workdayToDate(Workday date) {
+        LocalDate nextWeekday = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.valueOf(date.toString())));
+        System.out.println(nextWeekday.getYear() + " " + nextWeekday.getMonthValue() + " " + nextWeekday.getDayOfMonth());
+        Date from = Date.from(nextWeekday.atStartOfDay()
+                .atZone(ZoneId.systemDefault())
+                .toInstant());
+//        from.setDate(from.getDate() + 1);
+        return from;
+    }
+
+    public static AssignedProject convertProjectAssignmentRequestToAssignedProject(
+            ProjectAssignmentRequest projectAssignmentRequest,
+            User user,
+            Project project,
+            Date date) {
+        return new AssignedProject(user, project, date);
+
+    }
+
+    public static ProjectAssignmentResponse convertAssignedProjectToProjectAssignmentResponse(AssignedProject assignedProject) {
+        User user = assignedProject.getUser();
+        Project project = assignedProject.getProject();
+        Date dateCorrector = Date.from(assignedProject.getDate().toInstant());
+        dateCorrector.setDate(dateCorrector.getDate() + 1);
+        return new ProjectAssignmentResponse(user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getUserId(),
+                project.getName(),
+                dateCorrector);
+    }
+
+
 }

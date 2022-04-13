@@ -3,14 +3,13 @@ package com.manage.employeemanagement.controller;
 
 import com.manage.employeemanagement.bll.ManagerBLL;
 import com.manage.employeemanagement.exception.EmployeeRegistrationException;
+import com.manage.employeemanagement.exception.ProjectAssignmentException;
 import com.manage.employeemanagement.exception.ProjectRegistrationException;
 import com.manage.employeemanagement.request.EmployeeRegisterRequest;
+import com.manage.employeemanagement.request.ProjectAssignmentRequest;
 import com.manage.employeemanagement.request.ProjectRegistrationRequest;
 import com.manage.employeemanagement.request.UpdateProjectNameRequest;
-import com.manage.employeemanagement.response.EmployeesResponse;
-import com.manage.employeemanagement.response.EmployeeRegistrationResponse;
-import com.manage.employeemanagement.response.ProjectResponse;
-import com.manage.employeemanagement.response.ResponseResult;
+import com.manage.employeemanagement.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -76,4 +75,8 @@ public class ManagerController {
         return managerBLL.renameProject(oldName, name.getNewName());
     }
 
+    @PostMapping("/projects/assignment")
+    public ResponseEntity<ResponseResult<ProjectAssignmentResponse>> assignProjectToEmployee(@RequestBody ProjectAssignmentRequest projectAssignmentRequest) throws ProjectAssignmentException {
+        return managerBLL.assignProjectToEmployee(projectAssignmentRequest);
+    }
 }

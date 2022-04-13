@@ -1,5 +1,6 @@
 package com.manage.employeemanagement.utils;
 
+import com.manage.employeemanagement.enums.Workday;
 import org.passay.CharacterData;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
@@ -8,7 +9,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.passay.DigestDictionaryRule.ERROR_CODE;
@@ -59,5 +64,7 @@ public class CustomUtils {
 
         return PageRequest.of(page, size, Sort.by(orders));
     }
+
+
 
 }

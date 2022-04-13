@@ -1,6 +1,7 @@
 package com.manage.employeemanagement.entity;
 
 
+import jdk.jfr.Timestamp;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -25,9 +26,12 @@ public class AssignedProject {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    private Date startDate;
+    @Temporal(TemporalType.DATE)
+    private Date date;
 
-    private Date endDate;
-
-
+    public AssignedProject(User user, Project project, Date date) {
+        this.user = user;
+        this.project = project;
+        this.date = date;
+    }
 }
