@@ -10,6 +10,7 @@ import com.manage.employeemanagement.exception.ProjectAssignmentException;
 import com.manage.employeemanagement.exception.ProjectRegistrationException;
 import com.manage.employeemanagement.request.EmployeeRegisterRequest;
 import com.manage.employeemanagement.request.ProjectAssignmentRequest;
+import com.manage.employeemanagement.request.ProjectChangeRequest;
 import com.manage.employeemanagement.request.ProjectRegistrationRequest;
 import com.manage.employeemanagement.response.*;
 import com.manage.employeemanagement.services.interfaces.ManagerService;
@@ -142,4 +143,8 @@ public class ManagerBLL {
         );
     }
 
+    public ResponseEntity changeAssignedProject(ProjectChangeRequest projectChangeRequest) throws ProjectAssignmentException {
+        AssignedProject assignedProject = projectService.changeAssignedProject(projectChangeRequest);
+        return new ResponseEntity<>(HttpStatus.OK)
+    }
 }

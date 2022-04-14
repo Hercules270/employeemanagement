@@ -10,6 +10,7 @@ import com.manage.employeemanagement.repository.AssignedProjectRepository;
 import com.manage.employeemanagement.repository.ProjectRepository;
 import com.manage.employeemanagement.repository.UserRepository;
 import com.manage.employeemanagement.request.ProjectAssignmentRequest;
+import com.manage.employeemanagement.request.ProjectChangeRequest;
 import com.manage.employeemanagement.request.ProjectRegistrationRequest;
 import com.manage.employeemanagement.services.interfaces.ProjectService;
 import com.manage.employeemanagement.utils.ConverterUtils;
@@ -17,10 +18,7 @@ import com.manage.employeemanagement.utils.CustomUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.ValidationUtils;
 
 import javax.ws.rs.BadRequestException;
 import java.text.SimpleDateFormat;
@@ -85,8 +83,11 @@ public class ProjectServiceImpl implements ProjectService {
         User employee = employeeOptional.get();
         Project project = projectOptional.get();
         Date date = ConverterUtils.workdayToDate(projectAssignmentRequest.getDay());
+        Optional<AssignedProject> existingProject = assignedProjectRepository.findAssignedProjectByUserAndDate(employee, date);
+        if(existingProject.isPresent()) {
+            throw new ProjectAssignmentException("Employee " + employee.getUserId() + " on " + new SimpleDateFormat("yyyy-MM-dd").format(date) + " works on project " + project.getName());
+        }
         AssignedProject assignedProject = ConverterUtils.convertProjectAssignmentRequestToAssignedProject(projectAssignmentRequest, employee, project, date);
-        log.info("Date is {}", new SimpleDateFormat("yyyy-MM-dd").format(assignedProject.getDate()));
         assignedProjectRepository.save(assignedProject);
         return assignedProject;
 
@@ -101,13 +102,8 @@ public class ProjectServiceImpl implements ProjectService {
             log.info("Project with name {} doesn't exist.", projectAssignmentRequest.getProjectName());
             throw new BadRequestException("Project with name " + projectAssignmentRequest.getProjectName() + " doesn't exist");
         }
-        User employee = employeeOptional.get();
         Project project = projectOptional.get();
         Date date = ConverterUtils.workdayToDate(projectAssignmentRequest.getDay());
-        Optional<AssignedProject> existingProject = assignedProjectRepository.findAssignedProjectByUserAndDate(employee, date);
-        if(existingProject.isPresent()) {
-            throw new ProjectAssignmentException("Employee " + employee.getUserId() + " on " + new SimpleDateFormat("yyyy-MM-dd").format(date) + " works on project " + project.getName());
-        }
         if(date.before(project.getStartDate()) || date.after(project.getEndDate())) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyy-MM-dd");
             throw new ProjectAssignmentException("Please choose day between project dates. Start date: " +
@@ -116,4 +112,25 @@ public class ProjectServiceImpl implements ProjectService {
         }
     }
 
+
+    @Override
+    public AssignedProject changeAssignedProject(ProjectChangeRequest projectChangeRequest) throws ProjectAssignmentException {
+        Optional<User> employeeOptional = userRepository.findUserByUserId(projectChangeRequest.getEmployeeId());
+        Optional<Project> projectOptional = projectRepository.findProjectByName(projectChangeRequest.getNewProjectName());
+        validateAssignmentRequest(projectChangeRequest, employeeOptional, projectOptional);
+        User employee = employeeOptional.get();
+        Project project = projectOptional.get();
+        Date date = ConverterUtils.workdayToDate(projectChangeRequest.getDay());
+        Optional<AssignedProject> existingProject = assignedProjectRepository.findAssignedProjectByUserAndDate(employee, date);
+        AssignedProject assignedProject;
+        if(existingProject.isPresent()) {
+            assignedProject = existingProject.get();
+            assignedProject.setProject(project);
+        } else {
+            assignedProject = ConverterUtils.convertProjectAssignmentRequestToAssignedProject(projectChangeRequest, employee, project, date);
+        }
+        assignedProjectRepository.save(assignedProject);
+        return assignedProject;
+
+    }
 }

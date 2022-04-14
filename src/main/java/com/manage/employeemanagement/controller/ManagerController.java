@@ -5,10 +5,7 @@ import com.manage.employeemanagement.bll.ManagerBLL;
 import com.manage.employeemanagement.exception.EmployeeRegistrationException;
 import com.manage.employeemanagement.exception.ProjectAssignmentException;
 import com.manage.employeemanagement.exception.ProjectRegistrationException;
-import com.manage.employeemanagement.request.EmployeeRegisterRequest;
-import com.manage.employeemanagement.request.ProjectAssignmentRequest;
-import com.manage.employeemanagement.request.ProjectRegistrationRequest;
-import com.manage.employeemanagement.request.UpdateProjectNameRequest;
+import com.manage.employeemanagement.request.*;
 import com.manage.employeemanagement.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -85,5 +82,10 @@ public class ManagerController {
     @PostMapping("/projects/assignment")
     public ResponseEntity<ResponseResult<ProjectAssignmentResponse>> assignProjectToEmployee(@RequestBody ProjectAssignmentRequest projectAssignmentRequest) throws ProjectAssignmentException {
         return managerBLL.assignProjectToEmployee(projectAssignmentRequest);
+    }
+
+    @PutMapping("/projects/assignment")
+    public ResponseEntity changeAssignedProject(@RequestBody ProjectChangeRequest projectChangeRequest) throws ProjectAssignmentException {
+        return managerBLL.changeAssignedProject(projectChangeRequest);
     }
 }
