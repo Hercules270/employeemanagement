@@ -8,6 +8,7 @@ import com.manage.employeemanagement.request.EmployeeRegisterRequest;
 import com.manage.employeemanagement.request.ProjectAssignmentRequest;
 import com.manage.employeemanagement.request.ProjectRegistrationRequest;
 import com.manage.employeemanagement.response.*;
+import com.manage.employeemanagement.response.employee.EmployeeInformationResponse;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.data.domain.Sort;
@@ -18,7 +19,7 @@ import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ConverterUtils {
@@ -67,7 +68,7 @@ public class ConverterUtils {
         return new Project(projectRequest.getName(), projectRequest.getStartDate(), projectRequest.getEndDate());
     }
 
-    public static Date workdayToDate(Workday date) {
+    public static Date convertWorkdayToDate(Workday date) {
         LocalDate nextWeekday = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.valueOf(date.toString())));
         System.out.println(nextWeekday.getYear() + " " + nextWeekday.getMonthValue() + " " + nextWeekday.getDayOfMonth());
         Date from = Date.from(nextWeekday.atStartOfDay()
@@ -118,4 +119,12 @@ public class ConverterUtils {
     }
 
 
+    public static EmployeeInformationResponse convertUserToEmployeeInformation(User employee, Optional<AssignedProject> assignedProjectByUserAndDate) {
+        EmployeeInformationResponse result = new EmployeeInformationResponse(employee.getFirstName(), employee.getLastName());
+        if(assignedProjectByUserAndDate.isPresent()) {
+            Project project = assignedProjectByUserAndDate.get().getProject();
+            result.setAssignedProjectToday(ConverterUtils.convertProjectToProjectResponse(project));
+        }
+        return result;
+    }
 }

@@ -82,7 +82,7 @@ public class ProjectServiceImpl implements ProjectService {
         validateAssignmentRequest(projectAssignmentRequest,employeeOptional, projectOptional);
         User employee = employeeOptional.get();
         Project project = projectOptional.get();
-        Date date = ConverterUtils.workdayToDate(projectAssignmentRequest.getDay());
+        Date date = ConverterUtils.convertWorkdayToDate(projectAssignmentRequest.getDay());
         Optional<AssignedProject> existingProject = assignedProjectRepository.findAssignedProjectByUserAndDate(employee, date);
         if(existingProject.isPresent()) {
             throw new ProjectAssignmentException("Employee " + employee.getUserId() + " on " + new SimpleDateFormat("yyyy-MM-dd").format(date) + " works on project " + project.getName());
@@ -103,7 +103,7 @@ public class ProjectServiceImpl implements ProjectService {
             throw new BadRequestException("Project with name " + projectAssignmentRequest.getProjectName() + " doesn't exist");
         }
         Project project = projectOptional.get();
-        Date date = ConverterUtils.workdayToDate(projectAssignmentRequest.getDay());
+        Date date = ConverterUtils.convertWorkdayToDate(projectAssignmentRequest.getDay());
         if(date.before(project.getStartDate()) || date.after(project.getEndDate())) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyy-MM-dd");
             throw new ProjectAssignmentException("Please choose day between project dates. Start date: " +
@@ -120,7 +120,7 @@ public class ProjectServiceImpl implements ProjectService {
         validateAssignmentRequest(projectChangeRequest, employeeOptional, projectOptional);
         User employee = employeeOptional.get();
         Project project = projectOptional.get();
-        Date date = ConverterUtils.workdayToDate(projectChangeRequest.getDay());
+        Date date = ConverterUtils.convertWorkdayToDate(projectChangeRequest.getDay());
         Optional<AssignedProject> existingProject = assignedProjectRepository.findAssignedProjectByUserAndDate(employee, date);
         AssignedProject assignedProject;
         if(existingProject.isPresent()) {

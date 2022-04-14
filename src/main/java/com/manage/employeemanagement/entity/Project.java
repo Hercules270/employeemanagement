@@ -21,7 +21,7 @@ public class Project {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<AssignedProject> assignments = new HashSet<>();
 
     @Temporal(TemporalType.DATE)
