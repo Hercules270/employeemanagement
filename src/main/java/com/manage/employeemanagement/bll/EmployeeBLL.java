@@ -1,6 +1,7 @@
 package com.manage.employeemanagement.bll;
 
 import com.manage.employeemanagement.entity.User;
+import com.manage.employeemanagement.exception.LoggingException;
 import com.manage.employeemanagement.response.ResponseResult;
 import com.manage.employeemanagement.response.employee.EmployeeInformationResponse;
 import com.manage.employeemanagement.services.interfaces.EmployeeService;
@@ -31,5 +32,10 @@ public class EmployeeBLL {
                 new ResponseResult<>(employeeInformationResponse, new Date()),
                 HttpStatus.OK
         );
+    }
+
+    public ResponseEntity logStartTime(String username) throws LoggingException {
+        employeeService.logStartTime(username);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

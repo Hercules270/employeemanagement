@@ -1,12 +1,16 @@
 package com.manage.employeemanagement.services.implementation;
 
 import com.manage.employeemanagement.entity.AssignedProject;
+import com.manage.employeemanagement.entity.Attendance;
 import com.manage.employeemanagement.entity.User;
+import com.manage.employeemanagement.exception.LoggingException;
 import com.manage.employeemanagement.repository.AssignedProjectRepository;
+import com.manage.employeemanagement.repository.AttendanceRepository;
 import com.manage.employeemanagement.repository.UserRepository;
 import com.manage.employeemanagement.response.employee.EmployeeInformationResponse;
 import com.manage.employeemanagement.services.interfaces.EmployeeService;
 import com.manage.employeemanagement.utils.ConverterUtils;
+import com.manage.employeemanagement.utils.CustomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +23,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private final UserRepository userRepository;
     private final AssignedProjectRepository assignedProjectRepository;
+    private final AttendanceRepository attendanceRepository;
 
     @Autowired
-    public EmployeeServiceImpl(UserRepository userRepository, AssignedProjectRepository assignedProjectRepository) {
+    public EmployeeServiceImpl(UserRepository userRepository, AssignedProjectRepository assignedProjectRepository, AttendanceRepository attendanceRepository) {
         this.userRepository = userRepository;
         this.assignedProjectRepository = assignedProjectRepository;
+        this.attendanceRepository = attendanceRepository;
     }
 
     @Override
@@ -36,6 +42,21 @@ public class EmployeeServiceImpl implements EmployeeService {
         Optional<AssignedProject> assignedProjectByUserAndDate = assignedProjectRepository.findAssignedProjectByUserAndDate(employee, new Date());
         return ConverterUtils.convertUserToEmployeeInformation(employee, assignedProjectByUserAndDate);
     }
+
+    @Override
+    public void logStartTime(String username) throws LoggingException {
+        Optional<User> employeeOptional = userRepository.findUserByUsername(username);
+        Optional<Attendance> attendanceByDate = attendanceRepository.findAttendanceByDate(new Date());
+        if(employeeOptional.isEmpty()) {
+            throw new BadRequestException("Records of employee with id " + username + " can't be found");
+        }
+        User employee = employeeOptional.get();
+        if(attendanceByDate.isPresent()) {
+            throw new LoggingException("Employee " + employee.getFirstName() + " " + employee.getLastName() + " has already come to work today.");
+        }
+        attendanceRepository.save(CustomUtils.getStartTimeAttendance(employee));
+    }
+
 }
 
 

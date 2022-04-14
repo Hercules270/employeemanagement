@@ -1,5 +1,7 @@
 package com.manage.employeemanagement.utils;
 
+import com.manage.employeemanagement.entity.Attendance;
+import com.manage.employeemanagement.entity.User;
 import com.manage.employeemanagement.enums.Workday;
 import org.passay.CharacterData;
 import org.passay.CharacterRule;
@@ -65,6 +67,12 @@ public class CustomUtils {
         return PageRequest.of(page, size, Sort.by(orders));
     }
 
-
+    public static Attendance getStartTimeAttendance(User employee) {
+        Attendance attendance = new Attendance();
+        attendance.setStartTime(new Date());
+        attendance.setUser(employee);
+        attendance.setDate(new Date());
+        return attendance;
+    }
 
 }

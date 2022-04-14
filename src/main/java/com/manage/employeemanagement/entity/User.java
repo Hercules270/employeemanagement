@@ -1,5 +1,6 @@
 package com.manage.employeemanagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,8 @@ public class User {
 
     @Column(unique = true)
     private String email;
+
+    @Temporal(TemporalType.DATE)
     private Date startDate;
     private String userId;
 

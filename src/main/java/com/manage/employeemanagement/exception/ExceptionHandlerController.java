@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
 import javax.ws.rs.BadRequestException;
 import java.util.Date;
 
@@ -106,6 +107,15 @@ public class ExceptionHandlerController {
         log.info("Error: ", ex);
         return new ResponseEntity<>(
                 new ErrorResponseResult(ex.getMessage(), new Date()), HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(value = LoggingException.class)
+    public ResponseEntity<ErrorResponseResult> handleLoggingException(
+            LoggingException ex, WebRequest request) {
+        log.info("Error: ", ex);
+        return new ResponseEntity<>(
+                new ErrorResponseResult(ex.getMessage(), new Date()), HttpStatus.CONFLICT
         );
     }
 
