@@ -1,7 +1,6 @@
 package com.manage.employeemanagement.exception;
 
 
-import com.manage.employeemanagement.enums.EmployeeRegistrationErrorEnum;
 import com.manage.employeemanagement.response.ErrorResponseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import javax.validation.ConstraintViolationException;
-import javax.validation.Valid;
 import javax.ws.rs.BadRequestException;
 import java.util.Date;
 
@@ -30,12 +28,7 @@ public class ExceptionHandlerController {
     public ResponseEntity<ErrorResponseResult> handleEmployeeRegistrationException(
             EmployeeRegistrationException ex, WebRequest request) {
         log.error("Error: ", ex);
-        if (ex.getErrorCode() == EmployeeRegistrationErrorEnum.USERNAME_ALREADY_EXISTS)
-            return new ResponseEntity<>(new ErrorResponseResult(ex.getMessage(), new Date()), HttpStatus.OK);
-        else
-            return new ResponseEntity<>(
-                    new ErrorResponseResult("Can't register user", new Date()), HttpStatus.OK);
-
+        return new ResponseEntity<>(new ErrorResponseResult(ex.getMessage(), new Date()), HttpStatus.OK);
     }
 
     @ExceptionHandler(value = ConstraintViolationException.class)

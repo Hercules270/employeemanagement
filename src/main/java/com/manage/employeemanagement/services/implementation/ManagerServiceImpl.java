@@ -1,7 +1,6 @@
 package com.manage.employeemanagement.services.implementation;
 
 import com.manage.employeemanagement.entity.User;
-import com.manage.employeemanagement.enums.EmployeeRegistrationErrorEnum;
 import com.manage.employeemanagement.exception.EmployeeRegistrationException;
 import com.manage.employeemanagement.repository.UserRepository;
 import com.manage.employeemanagement.request.EmployeeRegisterRequest;
@@ -52,7 +51,7 @@ public class ManagerServiceImpl implements ManagerService {
         Response response = usersResource.create(userRepresentation);
         if (response.getStatus() != 201) {
             log.info("Couldn't register employee with username: {} response status: {}", userRepresentation.getUsername(), response.getStatus());
-            throw new EmployeeRegistrationException("Error during registration of employee " + userRepresentation.getUsername(), EmployeeRegistrationErrorEnum.UNKNOWN_ERROR);
+            throw new EmployeeRegistrationException("Error during registration of employee " + userRepresentation.getUsername());
         }
         log.info("Response: {} {}", response.getStatus(), response.getStatusInfo());
         return userRepresentation;
@@ -61,15 +60,15 @@ public class ManagerServiceImpl implements ManagerService {
     private void isEmployeeUnique(EmployeeRegisterRequest userRepresentation) throws EmployeeRegistrationException {
         if(userRepository.findUserByUsername(userRepresentation.getUsername()).isPresent()) {
             log.info("User with username {} already exists", userRepresentation.getUsername());
-            throw new EmployeeRegistrationException("User with username " + userRepresentation.getUsername() + " already exists", EmployeeRegistrationErrorEnum.USERNAME_ALREADY_EXISTS);
+            throw new EmployeeRegistrationException("User with username " + userRepresentation.getUsername() + " already exists");
         }
         if(userRepository.findUserByEmail(userRepresentation.getEmail()).isPresent()) {
             log.info("User with email {} already exists", userRepresentation.getEmail());
-            throw new EmployeeRegistrationException("User with email " + userRepresentation.getEmail() + " already exists", EmployeeRegistrationErrorEnum.USERNAME_ALREADY_EXISTS);
+            throw new EmployeeRegistrationException("User with email " + userRepresentation.getEmail() + " already exists");
         }
         if(userRepository.findUserByFirstNameAndLastName(userRepresentation.getFirstName(), userRepresentation.getLastName()).isPresent()) {
             log.info("User with firstName {} and lastName {} already exists", userRepresentation.getFirstName(), userRepresentation.getLastName());
-            throw new EmployeeRegistrationException("User with firstName " + userRepresentation.getFirstName() + "and lastName " + userRepresentation.getLastName() + " already exists", EmployeeRegistrationErrorEnum.USERNAME_ALREADY_EXISTS);
+            throw new EmployeeRegistrationException("User with firstName " + userRepresentation.getFirstName() + " and lastName " + userRepresentation.getLastName() + " already exists");
         }
     }
 
