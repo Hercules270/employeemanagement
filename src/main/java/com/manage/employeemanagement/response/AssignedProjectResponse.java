@@ -11,7 +11,7 @@ public class AssignedProjectResponse extends ProjectResponse{
 
     @Getter
     @Setter
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd E")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd E", timezone = JsonFormat.DEFAULT_TIMEZONE)
     private Date assignedDate;
 
     public AssignedProjectResponse(String projectName, Date startDate, Date endDate, Date assignedDate) {

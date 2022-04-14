@@ -23,5 +23,5 @@ public interface ProjectService {
 
     AssignedProject assignProjectToEmployee(ProjectAssignmentRequest projectAssignmentRequest) throws ProjectAssignmentException;
 
-    AssignedProject changeAssignedProject(ProjectChangeRequest projectChangeRequest) throws ProjectAssignmentException;
+    void changeAssignedProject(ProjectChangeRequest projectChangeRequest) throws ProjectAssignmentException;
 }

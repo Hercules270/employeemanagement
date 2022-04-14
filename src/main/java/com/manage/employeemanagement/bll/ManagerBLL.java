@@ -71,15 +71,17 @@ public class ManagerBLL {
     public ResponseEntity<ResponseResult<List<EmployeeAssignedProjectResponse>>> getAllEmployeeProjects(int page, int size, String[] sort) {
         List<User> employees = managerService.getAllEmployees(page, size, sort);
 
-        return new ResponseEntity<>(
-                    new ResponseResult<>(
+        ResponseEntity<ResponseResult<List<EmployeeAssignedProjectResponse>>> responseResultResponseEntity = new ResponseEntity<>(
+                new ResponseResult<>(
                         employees.stream()
                                 .map(ConverterUtils::convertEmployeeToEmployeeAssignedProject)
                                 .collect(Collectors.toList()),
-                            new Date()
-                    ),
+                        new Date()
+                ),
                 HttpStatus.OK
-            );
+        );
+        List<EmployeeAssignedProjectResponse> s = responseResultResponseEntity.getBody().getResult();
+        return responseResultResponseEntity;
     }
 
     public ResponseEntity<ResponseResult<EmployeesResponse>> getEmployee(String firstName, String lastName) {
@@ -134,7 +136,6 @@ public class ManagerBLL {
         }
         AssignedProject assignedProject = projectService.assignProjectToEmployee(projectAssignmentRequest);
         ProjectAssignmentResponse projectAssignmentResponse = ConverterUtils.convertAssignedProjectToProjectAssignmentResponse(assignedProject);
-        log.info("Date is {}", new SimpleDateFormat("yyyy-MM-dd").format(projectAssignmentResponse.getDate()));
         return new ResponseEntity<>(
                 new ResponseResult<>(
                         projectAssignmentResponse, new Date()
@@ -144,7 +145,7 @@ public class ManagerBLL {
     }
 
     public ResponseEntity changeAssignedProject(ProjectChangeRequest projectChangeRequest) throws ProjectAssignmentException {
-        AssignedProject assignedProject = projectService.changeAssignedProject(projectChangeRequest);
-        return new ResponseEntity<>(HttpStatus.OK)
+        projectService.changeAssignedProject(projectChangeRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

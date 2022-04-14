@@ -114,9 +114,9 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     @Override
-    public AssignedProject changeAssignedProject(ProjectChangeRequest projectChangeRequest) throws ProjectAssignmentException {
+    public void changeAssignedProject(ProjectChangeRequest projectChangeRequest) throws ProjectAssignmentException {
         Optional<User> employeeOptional = userRepository.findUserByUserId(projectChangeRequest.getEmployeeId());
-        Optional<Project> projectOptional = projectRepository.findProjectByName(projectChangeRequest.getNewProjectName());
+        Optional<Project> projectOptional = projectRepository.findProjectByName(projectChangeRequest.getProjectName());
         validateAssignmentRequest(projectChangeRequest, employeeOptional, projectOptional);
         User employee = employeeOptional.get();
         Project project = projectOptional.get();
@@ -127,10 +127,9 @@ public class ProjectServiceImpl implements ProjectService {
             assignedProject = existingProject.get();
             assignedProject.setProject(project);
         } else {
-            assignedProject = ConverterUtils.convertProjectAssignmentRequestToAssignedProject(projectChangeRequest, employee, project, date);
+            throw new ProjectAssignmentException("Employee " + employee.getFirstName() + " " + employee.getLastName() +
+                    " doesn't have assignment to change.");
         }
         assignedProjectRepository.save(assignedProject);
-        return assignedProject;
-
     }
 }
