@@ -39,7 +39,7 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackOn = EmployeeRegistrationException.class)
     public UserRepresentation addNewEmployee(EmployeeRegisterRequest employee) throws EmployeeRegistrationException {
         isEmployeeUnique(employee);
         UserRepresentation userRepresentation = ConverterUtils.convertEmployeeToUserRepresentation(employee);
