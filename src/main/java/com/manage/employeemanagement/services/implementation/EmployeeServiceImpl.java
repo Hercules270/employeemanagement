@@ -46,17 +46,33 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public void logStartTime(String username) throws LoggingException {
         Optional<User> employeeOptional = userRepository.findUserByUsername(username);
-        Optional<Attendance> attendanceByDate = attendanceRepository.findAttendanceByDate(new Date());
         if(employeeOptional.isEmpty()) {
             throw new BadRequestException("Records of employee with id " + username + " can't be found");
         }
         User employee = employeeOptional.get();
+        Optional<Attendance> attendanceByDate = attendanceRepository.findAttendanceByUserAndDate(employee, new Date());
         if(attendanceByDate.isPresent()) {
             throw new LoggingException("Employee " + employee.getFirstName() + " " + employee.getLastName() + " has already come to work today.");
         }
         attendanceRepository.save(CustomUtils.getStartTimeAttendance(employee));
     }
 
+    @Override
+    public void logEndTime(String username) throws LoggingException {
+        Optional<User> employeeOptional = userRepository.findUserByUsername(username);
+        if(employeeOptional.isEmpty()) {
+            throw new BadRequestException("Records of employee with id " + username + " can't be found");
+        }
+        User employee = employeeOptional.get();
+        Optional<Attendance> attendanceByDate = attendanceRepository.findAttendanceByUserAndDate(employee, new Date());
+        if(attendanceByDate.isEmpty()) {
+            throw new LoggingException("Employee " + employee.getFirstName() + " " + employee.getLastName() + " has not come to the office today");
+        }
+        if(attendanceByDate.get().getEndTime() != null) {
+            throw new LoggingException("Employee " + employee.getFirstName() + " " + employee.getLastName() + " has already left office today");
+        }
+        attendanceRepository.save(CustomUtils.getEndTimeAttendance(attendanceByDate));
+    }
 }
 
 

@@ -38,4 +38,9 @@ public class EmployeeBLL {
         employeeService.logStartTime(username);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    public ResponseEntity logEndTime(String username) throws LoggingException {
+        employeeService.logEndTime(username);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 }

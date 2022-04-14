@@ -8,4 +8,6 @@ public interface EmployeeService {
     EmployeeInformationResponse getEmployee(String username);
 
     void logStartTime(String username) throws LoggingException;
+
+    void logEndTime(String username) throws LoggingException;
 }

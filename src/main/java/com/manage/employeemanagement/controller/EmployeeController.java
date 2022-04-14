@@ -10,10 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -32,9 +29,14 @@ public class EmployeeController {
         return employeeBLL.getCurrentInformation(jwt.getClaim("username"));
     }
 
-    @PostMapping("/startTime")
-    public ResponseEntity logStartTime(@AuthenticationPrincipal Jwt jwt) throws LoggingException {
-        return employeeBLL.logStartTime(jwt.getClaim("username"));
+    @PostMapping("/attendance/{come}")
+    public ResponseEntity logStartTime(@AuthenticationPrincipal Jwt jwt,
+                                       @PathVariable boolean come) throws LoggingException {
+        if(come) {
+            return employeeBLL.logStartTime(jwt.getClaim("username"));
+        } else {
+             return employeeBLL.logEndTime(jwt.getClaim("username"));
+        }
     }
 
 }

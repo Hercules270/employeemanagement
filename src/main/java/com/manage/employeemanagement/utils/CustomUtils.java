@@ -17,6 +17,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static org.passay.DigestDictionaryRule.ERROR_CODE;
 
@@ -75,4 +76,9 @@ public class CustomUtils {
         return attendance;
     }
 
+    public static Attendance getEndTimeAttendance(Optional<Attendance> attendanceOptional) {
+        Attendance attendance = attendanceOptional.get();
+        attendance.setEndTime(new Date());
+        return attendance;
+    }
 }
