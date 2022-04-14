@@ -67,6 +67,20 @@ public class ManagerBLL {
         );
     }
 
+    public ResponseEntity<ResponseResult<List<EmployeeAssignedProjectResponse>>> getAllEmployeeProjects(int page, int size, String[] sort) {
+        List<User> employees = managerService.getAllEmployees(page, size, sort);
+
+        return new ResponseEntity<>(
+                    new ResponseResult<>(
+                        employees.stream()
+                                .map(ConverterUtils::convertEmployeeToEmployeeAssignedProject)
+                                .collect(Collectors.toList()),
+                            new Date()
+                    ),
+                HttpStatus.OK
+            );
+    }
+
     public ResponseEntity<ResponseResult<EmployeesResponse>> getEmployee(String firstName, String lastName) {
         Optional<User> employee = managerService.getEmployee(firstName, lastName);
         if(employee.isPresent()) {
@@ -127,4 +141,5 @@ public class ManagerBLL {
                 HttpStatus.CREATED
         );
     }
+
 }

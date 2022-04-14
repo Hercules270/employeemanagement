@@ -1,16 +1,16 @@
 package com.manage.employeemanagement.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Project {
 
@@ -21,8 +21,8 @@ public class Project {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "project")
-    private Set<AssignedProject> assignments;
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    private Set<AssignedProject> assignments = new HashSet<>();
 
     @Temporal(TemporalType.DATE)
     private Date startDate;

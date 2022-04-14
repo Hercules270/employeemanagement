@@ -6,6 +6,7 @@ import com.manage.employeemanagement.exception.ProjectAssignmentException;
 import com.manage.employeemanagement.exception.ProjectRegistrationException;
 import com.manage.employeemanagement.request.ProjectAssignmentRequest;
 import com.manage.employeemanagement.request.ProjectRegistrationRequest;
+import org.springframework.http.ResponseEntity;
 
 import javax.ws.rs.BadRequestException;
 import java.util.List;

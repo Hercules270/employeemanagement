@@ -7,9 +7,7 @@ import com.manage.employeemanagement.enums.Workday;
 import com.manage.employeemanagement.request.EmployeeRegisterRequest;
 import com.manage.employeemanagement.request.ProjectAssignmentRequest;
 import com.manage.employeemanagement.request.ProjectRegistrationRequest;
-import com.manage.employeemanagement.response.EmployeesResponse;
-import com.manage.employeemanagement.response.ProjectAssignmentResponse;
-import com.manage.employeemanagement.response.ProjectResponse;
+import com.manage.employeemanagement.response.*;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.data.domain.Sort;
@@ -20,6 +18,8 @@ import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ConverterUtils {
 
@@ -97,6 +97,24 @@ public class ConverterUtils {
                 user.getUserId(),
                 project.getName(),
                 dateCorrector);
+    }
+
+    public static EmployeeAssignedProjectResponse convertEmployeeToEmployeeAssignedProject(User employee) {
+        EmployeeAssignedProjectResponse employeeAssignedProjectResponse =
+                new EmployeeAssignedProjectResponse(employee.getUserId(), employee.getFirstName(), employee.getLastName(), employee.getEmail());
+        List<AssignedProjectResponse> projects = employee.getAssignments().stream()
+                .map(assignedProject ->
+                        new AssignedProjectResponse(
+                                assignedProject.getProject().getName(),
+                                assignedProject.getProject().getStartDate(),
+                                assignedProject.getProject().getEndDate(),
+                                assignedProject.getDate()
+                        ))
+                .collect(Collectors.toList());
+        employeeAssignedProjectResponse.setAssignedProjects(projects);
+        return employeeAssignedProjectResponse;
+
+
     }
 
 

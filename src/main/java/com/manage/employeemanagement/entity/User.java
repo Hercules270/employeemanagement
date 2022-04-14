@@ -1,16 +1,20 @@
 package com.manage.employeemanagement.entity;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.checkerframework.common.aliasing.qual.Unique;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(uniqueConstraints = @UniqueConstraint(name = "firstNameAndLastName", columnNames = {"firstName", "lastName"}))
 public class User {
@@ -29,8 +33,8 @@ public class User {
     private Date startDate;
     private String userId;
 
-    @OneToMany(mappedBy = "user")
-    private Set<AssignedProject> assignments;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Set<AssignedProject> assignments = new HashSet<>();
 
 
     public User(String firstName, String lastName, String username, String email, Date startDate) {

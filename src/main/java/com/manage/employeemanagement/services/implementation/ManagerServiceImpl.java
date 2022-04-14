@@ -5,7 +5,6 @@ import com.manage.employeemanagement.enums.EmployeeRegistrationErrorEnum;
 import com.manage.employeemanagement.exception.EmployeeRegistrationException;
 import com.manage.employeemanagement.repository.UserRepository;
 import com.manage.employeemanagement.request.EmployeeRegisterRequest;
-import com.manage.employeemanagement.request.ProjectAssignmentRequest;
 import com.manage.employeemanagement.services.interfaces.ManagerService;
 import com.manage.employeemanagement.utils.ConverterUtils;
 import com.manage.employeemanagement.utils.CustomUtils;

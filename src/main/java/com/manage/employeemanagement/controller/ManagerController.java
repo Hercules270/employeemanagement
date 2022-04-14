@@ -41,9 +41,16 @@ public class ManagerController {
     public ResponseEntity<ResponseResult<List<EmployeesResponse>>> getAllEmployees(
             @RequestParam(defaultValue = "0") @Min(0) int page,
             @RequestParam(defaultValue = "5") @Min(1) int size,
-            @RequestParam(defaultValue = "id,asc") String[] sort
-            ) {
+            @RequestParam(defaultValue = "id,asc") String[] sort) {
         return managerBLL.getAllEmployees(page, size, sort);
+    }
+
+    @GetMapping("/employees/projects")
+    public ResponseEntity<ResponseResult<List<EmployeeAssignedProjectResponse>>> getAllEmployeeProjects(
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "5") @Min(1) int size,
+            @RequestParam(defaultValue = "id,asc") String[] sort) {
+        return managerBLL.getAllEmployeeProjects(page, size, sort);
     }
 
     @GetMapping("/employee")
