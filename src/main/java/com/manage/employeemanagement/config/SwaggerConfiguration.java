@@ -34,8 +34,8 @@ public class SwaggerConfiguration {
 
     public SwaggerConfiguration(@Value("${keycloak.server.url}") String serverUrl,
                                 @Value("${keycloak.realm}") String realm,
-                                @Value("${keycloak.client.id}") String clientId,
-                                @Value("${keycloak.client.secret}") String clientSecret,
+                                @Value("${keycloak.client.employee-server.id}") String clientId,
+                                @Value("${keycloak.client.employee-server.secret}") String clientSecret,
                                 @Value("${keycloak.login.uri}")String loginUri) {
         this.SERVER_URL = serverUrl;
         this.REALM = realm;

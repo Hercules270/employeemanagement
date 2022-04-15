@@ -30,7 +30,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/attendance/{come}")
-    public ResponseEntity logStartTime(@AuthenticationPrincipal Jwt jwt,
+    public ResponseEntity logAttendanceTime(@AuthenticationPrincipal Jwt jwt,
                                        @PathVariable boolean come) throws LoggingException {
         if(come) {
             return employeeBLL.logStartTime(jwt.getClaim("username"));
